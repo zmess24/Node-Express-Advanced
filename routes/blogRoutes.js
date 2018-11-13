@@ -26,12 +26,13 @@ module.exports = app => {
     // if yes, then respond to the request right away
     // and return
     if (cachedBlogs) { 
-      console.log("Serving from cache");
+      console.log("SERVING FROM CACHE");
       return res.send(cachedBlogs);
     }
     // if no, we need to respont to request
     // and update our cache to store the data
     const blogs = await Blog.find({ _user: req.user.id });
+    console.log("SERVING FROM MONGODB")
     res.send(blogs);
     // REMEMBER: Redis can't store objects, hence `JSON.stringify`.
     client.set(req.user.id, JSON.stringify(blogs));
