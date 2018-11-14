@@ -6,15 +6,17 @@ const
 
 // Create Redis instance & promisfy the `.get` method.
 const client = redis.createClient(redisUrl)
-client.get = util.promisify(client.get);
+client.hget = util.promisify(client.hget);
 
 // Preserve the exec method on the Query prototype to invoke later.
 const exec = mongoose.Query.prototype.exec;
 
 // Adding 'cache' property to Query prototype to allow for cache toggle.
-mongoose.Query.prototype.cache = function() {
+mongoose.Query.prototype.cache = function(options = {}) {
     // 'this' refers to query instance.
+    // Properties are arbitrary values.
     this.useCache = true;
+    this.hashKey = JSON.stringify(options.key || '');
     // returning 'this' allows function to be chainable.
     return this;
 };
@@ -32,7 +34,7 @@ mongoose.Query.prototype.exec = async function() {
     );
 
     // See if we have a value for 'key' in redis
-    const cacheValue = await client.get(key);
+    const cacheValue = await client.hget(this.hashKey, key);
 
     // If we do, return the cached value.
     // REMEMBER: Redis returns JSON, so need to parse before sending back.
@@ -48,7 +50,8 @@ mongoose.Query.prototype.exec = async function() {
 
     // Otherwise, issue the query and store the result in Redis.
     const result = await exec.apply(this, arguments);
-    // Update the value of the `key` in Redis;
-    client.set(key, JSON.stringify(result));
+    // Update the value of the `key` in Redis; 
+    // Set Expiration time in seconds.
+    client.hset(this.hashKey, key, JSON.stringify(result), 'EX', 10);
     return result;
 };
