@@ -24,7 +24,15 @@ mongoose.Query.prototype.exec = async function() {
 
     // If we do, return the cached value.
     // REMEMBER: Redis returns JSON, so need to parse before sending back.
-    if (cacheValue) return JSON.parse(cacheValue);
+    if (cacheValue) {
+        // Mongoose `exec` functions expects to return mongoose model.
+        const doc = JSON.parse(cacheValue);
+        // Hydrate all returned values depending on whether the 'cacheValue' is
+        // an array or object.
+        Array.isArray(doc) 
+            ? doc.map(d => new this.model(d))
+            : new this.model(doc);
+    }
 
     // Otherwise, issue the query and store the result in Redis.
     const result = await exec.apply(this, arguments);
