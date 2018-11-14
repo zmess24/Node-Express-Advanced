@@ -13,7 +13,7 @@ const exec = mongoose.Query.prototype.exec;
 
 // Adding 'cache' property to Query prototype to allow for cache toggle.
 mongoose.Query.prototype.cache = function(options = {}) {
-    // 'this' refers to query instance.
+    // 'this' refers to the query instance.
     // Properties are arbitrary values.
     this.useCache = true;
     this.hashKey = JSON.stringify(options.key || '');
@@ -54,4 +54,10 @@ mongoose.Query.prototype.exec = async function() {
     // Set Expiration time in seconds.
     client.hset(this.hashKey, key, JSON.stringify(result), 'EX', 10);
     return result;
+};
+
+module.exports = {
+    clearHash(hashKey) {
+        client.del(JSON.stringify(hashKey));
+    }
 };

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const requireLogin = require('../middlewares/requireLogin');
+const { clearHash } = require('../services/cache');
 
 const Blog = mongoose.model('Blog');
 
@@ -35,5 +36,8 @@ module.exports = app => {
     } catch (err) {
       res.send(400, err);
     }
+
+    // We want to clear the cache for api/blogs whenever there is a POST.
+    clearHash(req.user.id);
   });
 };
