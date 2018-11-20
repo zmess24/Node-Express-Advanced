@@ -14,7 +14,7 @@ beforeEach(async () => {
 });
 
 afterEach(async() => {
-    await browser.close();
+    // await browser.close();
 });
 
 test('the header has the correct test', async () => {
@@ -29,16 +29,25 @@ test('clicking login starts the oauth flow', async () => {
 });
 
 test('When signed in, shows logout button', async () => {
+    // MongoDB user id.
     const id = '5be5197b435c060d8bd44652';
+
     const Buffer = require('safe-buffer').Buffer;
+    // Create sessionObject to encode into cookie.
     const sessionObject = {
         passport: { user: id }
     };
+
     const sessionString = Buffer.from(JSON.stringify(sessionObject)).toString('base64');
     const Keygrip = require('keygrip');
     const keys = require('../config/keys');
     const keygrip = new Keygrip([keys.cookieKey]);
     const sig = keygrip.sign(`session=${sessionString}`);
 
-    console.log(sessionString, sig)
+    // Set session and session sig cookies.
+    await page.setCookie({ name: 'session', value: sessionString });
+    await page.setCookie({ name: 'session.sig', value: sig });
+    // Refresh the page to allow cookies to set.
+    await page.goto('localhost:3000')
+    
 });
