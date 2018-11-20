@@ -14,7 +14,7 @@ beforeEach(async () => {
 });
 
 afterEach(async() => {
-    // await browser.close();
+    await browser.close();
 });
 
 test('the header has the correct test', async () => {
@@ -38,6 +38,7 @@ test('When signed in, shows logout button', async () => {
         passport: { user: id }
     };
 
+    // Create session and session.sig cookies.
     const sessionString = Buffer.from(JSON.stringify(sessionObject)).toString('base64');
     const Keygrip = require('keygrip');
     const keys = require('../config/keys');
@@ -48,6 +49,11 @@ test('When signed in, shows logout button', async () => {
     await page.setCookie({ name: 'session', value: sessionString });
     await page.setCookie({ name: 'session.sig', value: sig });
     // Refresh the page to allow cookies to set.
-    await page.goto('localhost:3000')
+    await page.goto('localhost:3000');
+    // Wait for DOM to finish loading to select element.
+    await page.waitFor('a[href="/auth/logout"]');
+
+    const text = await page.$eval('a[href="/auth/logout"]', el => el.innerHTML);
+    expect(text).toEqual('Logout');
     
 });
