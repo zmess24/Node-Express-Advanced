@@ -1,5 +1,7 @@
-// Puppateer starts up Chromium
-const puppeteer = require("puppeteer");
+const 
+    // Puppateer starts up Chromium
+    puppeteer = require("puppeteer"),
+    sessionFactory = require('./factories/sessionFactory');
 
 // Keep browser and page in global scope.
 let browser, page;
@@ -29,11 +31,9 @@ test('Clicking login starts the oauth flow', async () => {
 });
 
 test('When signed in, shows logout button', async () => {
-    // MongoDB user id.
-    const id = '5be5197b435c060d8bd44652';
-
+    const { session, sig } = sessionFactory();
     // Set session and session sig cookies.
-    await page.setCookie({ name: 'session', value: sessionString });
+    await page.setCookie({ name: 'session', value: session });
     await page.setCookie({ name: 'session.sig', value: sig });
     // Refresh the page to allow cookies to set.
     await page.goto('localhost:3000');
