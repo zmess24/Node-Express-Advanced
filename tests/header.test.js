@@ -17,12 +17,12 @@ afterEach(async() => {
     await browser.close();
 });
 
-test('the header has the correct test', async () => {
+test('The header has the correct text', async () => {
     const text = await page.$eval('a.brand-logo', el => el.innerHTML);
     expect(text).toEqual('Blogster');
 });
 
-test('clicking login starts the oauth flow', async () => {
+test('Clicking login starts the oauth flow', async () => {
     await page.click('.right a');
     const url = await page.url();
     expect(url).toMatch(/accounts\.google\.com/)
@@ -31,19 +31,6 @@ test('clicking login starts the oauth flow', async () => {
 test('When signed in, shows logout button', async () => {
     // MongoDB user id.
     const id = '5be5197b435c060d8bd44652';
-
-    const Buffer = require('safe-buffer').Buffer;
-    // Create sessionObject to encode into cookie.
-    const sessionObject = {
-        passport: { user: id }
-    };
-
-    // Create session and session.sig cookies.
-    const sessionString = Buffer.from(JSON.stringify(sessionObject)).toString('base64');
-    const Keygrip = require('keygrip');
-    const keys = require('../config/keys');
-    const keygrip = new Keygrip([keys.cookieKey]);
-    const sig = keygrip.sign(`session=${sessionString}`);
 
     // Set session and session sig cookies.
     await page.setCookie({ name: 'session', value: sessionString });
