@@ -1,5 +1,8 @@
 // Puppeteer starts up Chromium
-const puppeteer = require('puppeteer');
+const 
+    puppeteer = require('puppeteer'),
+    sessionFactory = require('../factories/sessionFactory'),
+    userFactory = require('../factories/userFactory');
 
 class CustomPage {
     static async build() {
@@ -11,13 +14,25 @@ class CustomPage {
 
         return new Proxy(customPage, {
             get: function(target, property) {
-                return customPage[property] || page[property] || browser[property];
+                return customPage[property] || browser[property] || page[property];
             }
         });
     }
 
     constructor(page) {
         this.page = page;
+    }
+
+    async login() {
+        const user = await userFactory();
+        const { session, sig } = sessionFactory(user);
+        // Set session and session sig cookies.
+        await this.setCookie({ name: 'session', value: session });
+        await this.setCookie({ name: 'session.sig', value: sig });
+        // Refresh the page to allow cookies to set.
+        await this.goto('localhost:3000');
+        // Wait for DOM to finish loading to select element.
+        await this.waitFor('a[href="/auth/logout"]');
     }
 };
 

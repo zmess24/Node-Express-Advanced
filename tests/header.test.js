@@ -1,17 +1,16 @@
 const 
-    sessionFactory = require('./factories/sessionFactory'),
-    userFactory = require('./factories/userFactory'),
     Page = require('./helpers/page');
     
-// Keep browser and page in global scope.
+// Keep page in global scope.
 let page;
 
-// beforeEach gest invoked before every test.
+// beforeEach gets invoked before every test.
 beforeEach(async () => { 
     page = await Page.build();
     await page.goto('localhost:3000');
 });
 
+// afterEach gets invoked after every test.
 afterEach(async() => {
     await page.close();
 });
@@ -28,17 +27,7 @@ test('Clicking login starts the oauth flow', async () => {
 });
 
 test('When signed in, shows logout button', async () => {
-    const user = await userFactory();
-    const { session, sig } = sessionFactory(user);
-    // Set session and session sig cookies.
-    await page.setCookie({ name: 'session', value: session });
-    await page.setCookie({ name: 'session.sig', value: sig });
-    // Refresh the page to allow cookies to set.
-    await page.goto('localhost:3000');
-    // Wait for DOM to finish loading to select element.
-    await page.waitFor('a[href="/auth/logout"]');
-
+    await page.login();
     const text = await page.$eval('a[href="/auth/logout"]', el => el.innerHTML);
     expect(text).toEqual('Logout');
-    
 });
