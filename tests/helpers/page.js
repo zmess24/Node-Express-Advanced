@@ -34,6 +34,10 @@ class CustomPage {
         // Wait for DOM to finish loading to select element.
         await this.waitFor('a[href="/auth/logout"]');
     }
+    
+    async getContentsOf(selector) {
+        return this.page.$eval(selector, el => el.innerHTML);
+    }
 };
 
 module.exports = CustomPage;
