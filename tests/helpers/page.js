@@ -1,8 +1,11 @@
+// Puppeteer starts up Chromium
 const puppeteer = require('puppeteer');
 
 class CustomPage {
     static async build() {
+        // Opens up chromium browser.
         const browser = await puppeteer.launch({ headless: false });
+        // Opens up new tab in chromium instance.
         const page = await browser.newPage();
         const customPage = new CustomPage(page);
 
@@ -13,7 +16,7 @@ class CustomPage {
         });
     }
 
-    constructor() {
+    constructor(page) {
         this.page = page;
     }
 };

@@ -1,22 +1,19 @@
 const 
-    // Puppateer starts up Chromium
-    puppeteer = require("puppeteer"),
     sessionFactory = require('./factories/sessionFactory'),
-    userFactory = require('./factories/userFactory');
+    userFactory = require('./factories/userFactory'),
+    Page = require('./helpers/page');
+    
 // Keep browser and page in global scope.
-let browser, page;
+let page;
 
 // beforeEach gest invoked before every test.
 beforeEach(async () => { 
-    // Opens up chromium browser
-    browser = await puppeteer.launch({ headless: false });
-    // Open new tab and navigate to localhost:3000
-    page = await browser.newPage();
+    page = await Page.build();
     await page.goto('localhost:3000');
 });
 
 afterEach(async() => {
-    await browser.close();
+    await page.close();
 });
 
 test('The header has the correct text', async () => {
