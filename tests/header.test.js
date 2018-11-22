@@ -1,5 +1,4 @@
-const 
-    Page = require('./helpers/page');
+const Page = require('./helpers/page');
     
 // Keep page in global scope.
 let page;
