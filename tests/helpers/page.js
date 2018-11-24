@@ -30,7 +30,7 @@ class CustomPage {
         await this.setCookie({ name: 'session', value: session });
         await this.setCookie({ name: 'session.sig', value: sig });
         // Refresh the page to allow cookies to set.
-        await this.goto('localhost:3000');
+        await this.goto('localhost:3000/blogs');
         // Wait for DOM to finish loading to select element.
         await this.waitFor('a[href="/auth/logout"]');
     }

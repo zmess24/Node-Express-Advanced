@@ -1,3 +1,5 @@
+// Tells Jest to wait 30 seconds before failing any test.
+jest.setTimeout(30000);
 // Require in user model to know that user collection exists
 require('../models/User');
 
