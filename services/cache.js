@@ -1,11 +1,11 @@
 const 
     mongoose = require('mongoose'),
     redis = require('redis'),
-    redisUrl = 'redis://127.0.0.1:6379',
+    keys = require('../config/keys'),
     util = require('util');
 
 // Create Redis instance & promisfy the `.get` method.
-const client = redis.createClient(redisUrl)
+const client = redis.createClient(keys.redisUrl)
 client.hget = util.promisify(client.hget);
 
 // Preserve the exec method on the Query prototype to invoke later.
