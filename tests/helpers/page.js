@@ -49,6 +49,18 @@ class CustomPage {
             }).then(res => res.json());
         }, path);
     }
+
+    post(path, data) {
+        return this.page.evaluate((_path, _data) => {
+            // 'fetch' api returns raw data, need to conver to json
+            return fetch(_path, {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(_data)
+            }).then(res => res.json());
+        }, path, data)
+    }
 };
 
 module.exports = CustomPage;
