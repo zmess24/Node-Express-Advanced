@@ -38,6 +38,17 @@ class CustomPage {
     async getContentsOf(selector) {
         return this.page.$eval(selector, el => el.innerHTML);
     }
+
+    get(path) {
+        return this.page.evaluate(_path => {
+            // 'fetch' api returns raw data, need to conver to json
+            return fetch(_path, {
+                method: 'GET',
+                credentials: 'same-origin',
+                headers: { 'Content-Type': 'application/json' }
+            }).then(res => res.json());
+        }, path);
+    }
 };
 
 module.exports = CustomPage;
