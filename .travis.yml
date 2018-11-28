@@ -1,0 +1,28 @@
+# What programming language we're using
+langauge: node_js
+# What version of node we want to use
+node_js:
+  - "8"
+# Dist is type of vm that will be created for us with OS.
+dist: trusty # Specific version of linux
+# Services that we want created for our project
+services:
+  - mongodb
+  - redis-server
+# Array of env variables that we want to have set anytime 
+# our application is run.
+env:
+  - NODE_ENV=ci
+cache:
+  directories:
+    - node_modules
+    - client/node_modules
+# Commands we want executed at the command line.
+install:
+    - npm install
+    - npm run build
+# 'nohup' - If the shell is closed, don't kill anything this command creates.
+script:
+  - nohup npm run start &
+  - sleep 3
+  - npm run test
