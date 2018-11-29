@@ -4,7 +4,7 @@ let page;
 
 beforeEach(async() => {
     page = await Page.build();
-    await page.goto('localhost:3000');
+    await page.goto('http://localhost:3000');
 });
 
 afterEach(async() => {
@@ -13,6 +13,7 @@ afterEach(async() => {
 
 describe('When logged in', async () => {
     beforeEach(async () => {
+        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36');
         await page.login();
         await page.click('a.btn-floating');
     });
