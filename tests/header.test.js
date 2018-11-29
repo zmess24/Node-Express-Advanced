@@ -6,7 +6,7 @@ let page;
 // beforeEach gets invoked before every test.
 beforeEach(async () => { 
     page = await Page.build();
-    await page.goto('localhost:3000');
+    await page.goto('http://localhost:3000');
 });
 
 // afterEach gets invoked after every test.

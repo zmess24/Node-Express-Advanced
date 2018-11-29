@@ -7,7 +7,11 @@ const
 class CustomPage {
     static async build() {
         // Opens up chromium browser.
-        const browser = await puppeteer.launch({ headless: false });
+        const browser = await puppeteer.launch({ 
+            headless: true,
+            args: ['--no-sandbox']
+        });
+
         // Opens up new tab in chromium instance.
         const page = await browser.newPage();
         const customPage = new CustomPage(page);
@@ -30,7 +34,7 @@ class CustomPage {
         await this.setCookie({ name: 'session', value: session });
         await this.setCookie({ name: 'session.sig', value: sig });
         // Refresh the page to allow cookies to set.
-        await this.goto('localhost:3000/blogs');
+        await this.goto('http://localhost:3000/blogs');
         // Wait for DOM to finish loading to select element.
         await this.waitFor('a[href="/auth/logout"]');
     }
