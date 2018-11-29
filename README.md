@@ -1,5 +1,7 @@
 # Node: Enhancing Performance
 
+[![Build Status](https://travis-ci.org/zmess24/Node-Express-Advanced.svg?branch=master)](https://travis-ci.org/zmess24/Node-Express-Advanced)
+
 ## Introduction:
 
 This tutorial was taken from Stephen Grider's udemy course, [Node JS: Advanced Concepts](https://www.udemy.com/advanced-node-for-developers/).
